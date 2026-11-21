@@ -85,6 +85,17 @@ foot{display:block;text-align:center;font-size:12px;color:var(--muted)}
 .toast img{width:30px;height:30px}
 .toast b{display:block;font-size:12px;color:var(--muted);font-weight:500}
 @keyframes toast{0%{opacity:0;transform:translate(-50%,-30px)}12%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-30px)}}
+.alert{position:absolute;left:50%;top:42%;width:min(320px,calc(100% - 40px));transform:translate(-50%,-50%);
+  background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px;text-align:center;
+  box-shadow:0 24px 60px rgba(0,0,0,.35);animation:alertin 1.8s ease forwards}
+.alert img{width:56px;height:56px;animation:shake .35s ease 3}
+.alert h4{margin:6px 0 2px;font-size:17px}
+.alert p{font-size:13px;color:var(--muted)}
+.alert .ab{display:flex;gap:8px;margin-top:12px}
+.alert .ab span{flex:1;padding:7px 0;border-radius:8px;background:var(--soft);border:1px solid var(--line);font-size:13px}
+.alert .ab span:last-child{background:var(--sun);border-color:var(--sun);color:#1B2033}
+@keyframes alertin{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}8%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}14%,88%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.95)}}
+@keyframes shake{0%,100%{rotate:0deg}25%{rotate:-14deg}75%{rotate:14deg}}
 .hero-img{width:150px;height:150px;align-self:center}
 .reveal .hero-img{animation:pop 1s cubic-bezier(.2,1.5,.4,1) both}
 @keyframes pop{0%{transform:scale(.2) rotate(-200deg);filter:blur(10px);opacity:0}60%{opacity:1}100%{transform:none;filter:none}}
@@ -175,7 +186,7 @@ const DZ_NOTE=[["phone","系统","你已连续使用手机 3 小时"],["bowl","�
  ["cat","室友","你看到我的台灯了吗"],["bell","快递","您的包裹已到驿站，取件码 8-3-21"],["fire","热搜","画地为牢 爆"]];
 const dzLayer=document.getElementById("dz"); let dzTimers=[];
 const rnd=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)];
-function dzClear(){ dzTimers.forEach(clearInterval); dzTimers=[]; dzLayer.innerHTML=""; }
+function dzClear(){ dzTimers.forEach(x=>{clearInterval(x);clearTimeout(x);}); dzTimers=[]; dzLayer.innerHTML=""; }
 function floater(){ const im=new Image(); im.src="img/d/"+pick(DZ_IMG)+".png"; im.alt="";
   im.className="floater"+(Math.random()<.6?" spin":"");
   const t=rnd(3,6); im.style.cssText=`left:${rnd(-5,90)}%;top:${rnd(5,85)}%;--s:${rnd(44,96)}px;--t:${t}s;--dx:${rnd(-160,160)}px;--dy:${rnd(-220,120)}px`;
@@ -183,9 +194,14 @@ function floater(){ const im=new Image(); im.src="img/d/"+pick(DZ_IMG)+".png"; i
 function toast(){ const [ic,who,msg]=pick(DZ_NOTE); const d=document.createElement("div"); d.className="toast";
   d.innerHTML=`<img src="img/d/${ic}.png" alt=""><span><b>${who} · 刚刚</b>${msg}</span>`;
   dzLayer.querySelectorAll(".toast").forEach(x=>x.remove()); dzLayer.appendChild(d); setTimeout(()=>d.remove(),2700); }
+const DZ_ALERT=[["上下文即将溢出","剩余窗口 3%，前文将被自动 compact","忽略","立即压缩"],["检测到注意力泄漏","有 37 个后台进程正在占用你的大脑","忽略","全部结束"],
+ ["内存不足","昨天晚饭的记忆将被释放以腾出空间","取消","释放"],["大脑未响应","是否等待它恢复？","强制退出","等待"],["电量不足","你的专注力仅剩 8%","稍后","省电模式"]];
+function alertPop(){ const [h,m,b1,b2]=pick(DZ_ALERT); const d=document.createElement("div"); d.className="alert";
+  d.innerHTML=`<img src="img/d/warning.png" alt=""><h4>${h}</h4><p>${m}</p><div class="ab"><span>${b1}</span><span>${b2}</span></div>`;
+  dzLayer.querySelectorAll(".alert").forEach(x=>x.remove()); dzLayer.appendChild(d); setTimeout(()=>d.remove(),1900); }
 function distract(level){ dzClear();
-  if(level==="heavy"){ floater(); floater(); dzTimers.push(setInterval(floater,650), setInterval(toast,1700)); setTimeout(toast,500); }
-  else { floater(); dzTimers.push(setInterval(floater,2200)); if(Math.random()<.5) setTimeout(toast,rnd(800,2500)); } }
+  if(level==="heavy"){ floater(); floater(); dzTimers.push(setInterval(floater,650), setInterval(toast,1700)); dzTimers.push(setTimeout(toast,500)); dzTimers.push(setTimeout(alertPop,rnd(1500,3200))); }
+  else { floater(); dzTimers.push(setInterval(floater,2200)); if(Math.random()<.5) dzTimers.push(setTimeout(toast,rnd(800,2500))); if(Math.random()<.3) dzTimers.push(setTimeout(alertPop,rnd(1200,3500))); } }
 
 const app = document.getElementById("app"), meter = document.getElementById("meter");
 let i = 0, picks = [], timer = null;
