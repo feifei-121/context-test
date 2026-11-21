@@ -29,6 +29,10 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16p
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 @keyframes ring{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(1.35,1.6)}}
 @media (max-width:480px){.btn.cta{width:auto;font-size:20px;padding:16px 44px}}
+.nick{display:flex;flex-direction:column;gap:6px;align-items:center}
+.nick input{width:min(280px,100%);font:inherit;font-size:16px;text-align:center;padding:12px 16px;border-radius:99px;border:1.5px solid var(--line);background:var(--soft);color:var(--ink)}
+.nick input:focus{outline:none;border-color:var(--accent)}
+.nick small{font-size:12px;color:var(--muted);text-align:center}
 .topbar{display:flex;justify-content:flex-end}
 .themebtn{font:inherit;font-size:13px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:99px;padding:6px 14px;cursor:pointer}
 .meter{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--muted)}
@@ -164,6 +168,10 @@ foot{display:block;text-align:center;font-size:12px;color:var(--muted)}
 
 <script>
 const SITE = "https://feifei-121.github.io/context-test/";
+// 统计后台：填入 Supabase 的 Project URL 和 anon/publishable key 后自动开启；留空则不记录
+const SB_URL = "";
+const SB_KEY = "";
+let nick = "";
 const Q = [
  {dim:"冲浪", ramble:true, text:"今天楼下的桂花开了第二轮。同事小王新买的电动牙刷有八个档位，他只用第一档。地铁上有个小孩一直在数站，数到第七站就睡着了。你的外卖备注写了“不要香菜”，结果来了双份香菜。好了，说正事：<b>“许飞画地为牢”的下一句是什么？</b>", opts:[
    ["厉娜吃肯德基"],["厉娜去问 AI"],["厉娜吃麦当劳"],["厉娜也画地为牢"]], answer:2, w:{F:2,M:1,H:1}},
@@ -240,9 +248,12 @@ function home(){
     <h1>测测你的<span class="k">上下文</span></h1>
     <p>大模型的上下文一满，就得 compact，前面的内容被压成一句“之前我们聊了一些事”。最近你是不是也这样：看完就忘，说话越来越像“综上所述”？</p>
     <p class="note">温馨提示：有闪现题目哦，做好准备~</p>
+    <div class="nick"><input id="nick" maxlength="20" autocomplete="nickname" placeholder="你的昵称（选填）" aria-label="你的昵称（选填）">
+      <small>填了昵称，作者能看到你测出来的结果；不填就记为匿名。</small></div>
     <button class="btn cta" id="go">开始测试 →</button>
     <p class="hint" style="text-align:center">叮咚，您的冬令时解药开始送餐啦~</p></div>`);
-  document.getElementById("go").onclick = ()=>{ i=0; picks=[]; timeouts=0; ask(); };
+  const ni=document.getElementById("nick"); ni.value=nick;
+  document.getElementById("go").onclick = ()=>{ nick=ni.value.trim().slice(0,20); i=0; picks=[]; timeouts=0; ask(); };
 }
 
 function ask(){
@@ -312,9 +323,19 @@ function score(){
   return {pct,total,tier,code,rev,flashAll};
 }
 
+function report(r,t){
+  if(!SB_URL||!SB_KEY) return;
+  const h={"apikey":SB_KEY,"Content-Type":"application/json","Prefer":"return=minimal"};
+  if(!SB_KEY.startsWith("sb_")) h.Authorization="Bearer "+SB_KEY;
+  const row={nickname:nick||"匿名",tier:t.k,persona:t.name,code:r.code,total:r.total,
+    memory:r.pct.M,focus:r.pct.F,summary:r.pct.S,human:r.pct.H,timeouts,
+    answers:picks,device:/Mobi|Android|iPhone/i.test(navigator.userAgent)?"手机":"电脑"};
+  try{ fetch(SB_URL.replace(/\/$/,"")+"/rest/v1/plays",{method:"POST",headers:h,body:JSON.stringify(row),keepalive:true}).catch(()=>{}); }catch(e){}
+}
 function result(){
   dzClear(); stopQ(); meter.hidden=true;
   const r=score(), t=r.tier;
+  report(r,t);
   const link=/^https?:/.test(location.href)&&location.hostname.endsWith("github.io")?location.origin+location.pathname:SITE;
   const share=`我在「测测你的上下文」里测出来是 ${t.k}（${t.name}），类型 ${r.code}。你的脑子现在多少 K？来测：${link}`;
   const dims=Object.keys(DIM).map(d=>{ const D=DIM[d],p=r.pct[d];
