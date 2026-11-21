@@ -7,18 +7,18 @@
 <style>
 /* Layout: one centered card column, a "token meter" pinned on top like a model's context bar */
 :root{
-  --bg:#EEF1F6; --card:#FFFFFF; --ink:#1B2033; --muted:#636A82; --line:#D9DEE8;
-  --accent:#FF5A36; --accent-ink:#FFFFFF; --teal:#11968C; --sun:#FFD447; --soft:#F6F7FB;
+  --bg:#EEF5FF; --card:#FFFFFF; --ink:#0B2545; --muted:#5A6F8F; --line:#D3E3F7;
+  --accent:#1F6FEB; --accent-ink:#FFFFFF; --teal:#4AA8FF; --sun:#DCEBFF; --soft:#F5F9FF; --warn:#F2545B;
   --display:"ZCOOL KuaiLe","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
   --body:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#12141C; --card:#1C1F2B; --ink:#ECEEF5; --muted:#9AA0B6; --line:#2E3244;
-  --accent:#FF7452; --accent-ink:#1A0E0A; --teal:#3CC4B8; --sun:#FFD95E; --soft:#232736; color-scheme:dark}}
+  --bg:#081426; --card:#0F2140; --ink:#EAF2FF; --muted:#8FA6C6; --line:#20375C;
+  --accent:#4D94FF; --accent-ink:#04122A; --teal:#7CC4FF; --sun:#1A3A6B; --soft:#142A4C; --warn:#FF7378; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#12141C; --card:#1C1F2B; --ink:#ECEEF5; --muted:#9AA0B6; --line:#2E3244;
-  --accent:#FF7452; --accent-ink:#1A0E0A; --teal:#3CC4B8; --sun:#FFD95E; --soft:#232736; color-scheme:dark}
+  --bg:#081426; --card:#0F2140; --ink:#EAF2FF; --muted:#8FA6C6; --line:#20375C;
+  --accent:#4D94FF; --accent-ink:#04122A; --teal:#7CC4FF; --sun:#1A3A6B; --soft:#142A4C; --warn:#FF7378; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
@@ -37,7 +37,7 @@ p{margin:0}
 .stack{display:flex;flex-direction:column;gap:14px}
 .scale{display:flex;gap:6px;flex-wrap:wrap;font-family:var(--mono);font-size:12px}
 .scale span{padding:3px 9px;border-radius:99px;background:var(--soft);border:1px solid var(--line)}
-.scale span.hot{background:var(--sun);border-color:var(--sun);color:#1B2033}
+.scale span.hot{background:var(--sun);border-color:var(--sun);color:var(--accent)}
 button{font:inherit;cursor:pointer;border:none}
 .btn{background:var(--accent);color:var(--accent-ink);padding:14px 22px;border-radius:14px;font-size:17px;font-weight:600;
   box-shadow:0 4px 0 color-mix(in srgb,var(--accent) 60%,#000);transition:transform .08s}
@@ -51,7 +51,7 @@ button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 .opt .l{font-family:var(--mono);font-weight:700;color:var(--accent);flex:none}
 .opt.picked{background:color-mix(in srgb,var(--accent) 14%,var(--card));border-color:var(--accent)}
 .qnum{display:flex;justify-content:space-between;align-items:center}
-.tag{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:6px;background:var(--sun);color:#1B2033}
+.tag{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:6px;background:var(--sun);color:var(--accent)}
 .tag.t{background:var(--teal);color:var(--card)}
 .flash{background:var(--soft);border:1.5px dashed var(--line);border-radius:14px;padding:18px;font-size:16px;line-height:1.85}
 .words{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;font-size:20px;font-family:var(--display)}
@@ -86,13 +86,13 @@ foot{display:block;text-align:center;font-size:12px;color:var(--muted)}
 .toast b{display:block;font-size:12px;color:var(--muted);font-weight:500}
 @keyframes toast{0%{opacity:0;transform:translate(-50%,-30px)}12%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-30px)}}
 .qbar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:-6px 0 2px}
-.qbar i{display:block;height:100%;width:100%;background:var(--teal);animation:qdrain var(--qs,10s) linear forwards}
-@keyframes qdrain{0%{width:100%;background:var(--teal)}69%{background:var(--teal)}70%{background:var(--accent)}100%{width:0;background:var(--accent)}}
+.qbar i{display:block;height:100%;width:100%;background:var(--accent);animation:qdrain var(--qs,10s) linear forwards}
+@keyframes qdrain{0%{width:100%;background:var(--accent)}69%{background:var(--accent)}70%{background:var(--warn)}100%{width:0;background:var(--warn)}}
 .ramble{font-size:17px;line-height:1.8}
 .ramble b{color:var(--ink)}
 .qsec{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums;color:var(--muted)}
-.qsec.hot{color:var(--accent)}
-.timeout{color:var(--accent);font-family:var(--display);font-size:22px;text-align:center}
+.qsec.hot{color:var(--warn)}
+.timeout{color:var(--warn);font-family:var(--display);font-size:22px;text-align:center}
 .hero-img{width:150px;height:150px;align-self:center}
 .reveal .hero-img{animation:pop 1s cubic-bezier(.2,1.5,.4,1) both}
 @keyframes pop{0%{transform:scale(.2) rotate(-200deg);filter:blur(10px);opacity:0}60%{opacity:1}100%{transform:none;filter:none}}
@@ -137,27 +137,27 @@ foot{display:block;text-align:center;font-size:12px;color:var(--muted)}
 <script>
 const SITE = "https://feifei-121.github.io/context-test/";
 const Q = [
- {dim:"冲浪", ramble:true, text:"今天楼下的桂花开了第二轮。同事小王新买的电动牙刷有八个档位，他只用第一档。地铁上有个小孩一直在数站，数到第七站就睡着了。你的外卖备注写了“不要香菜”，结果还是来了香菜。好了，说正事：<b>“许飞画地为牢”的下一句是什么？</b>", opts:[
+ {dim:"冲浪", ramble:true, text:"今天楼下的桂花开了第二轮。同事小王新买的电动牙刷有八个档位，他只用第一档。地铁上有个小孩一直在数站，数到第七站就睡着了。你的外卖备注写了“不要香菜”，结果来了双份香菜。好了，说正事：<b>“许飞画地为牢”的下一句是什么？</b>", opts:[
    ["厉娜吃肯德基"],["厉娜去问 AI"],["厉娜吃麦当劳"],["厉娜也画地为牢"]], answer:2, w:{F:2,M:1,H:1}},
- {dim:"记忆", text:"你能清楚地说出昨天晚饭吃了什么吗？", opts:[
-   ["能，连蘸料怎么调的都记得",{M:3}],["记得主菜，配菜已经糊了",{M:2}],["我得翻一下外卖记录",{M:1}],["我昨天……吃晚饭了吗？",{M:0}]]},
+ {dim:"记忆", text:"昨天晚饭吃了什么？给你 10 秒，不许翻手机。", opts:[
+   ["能说，连蘸料比例都记得：麻酱三勺，蒜泥一勺",{M:3}],["记得主菜，配菜已经被 compact 了",{M:2}],["左手已经在翻外卖订单了",{M:1}],["昨天……我吃晚饭了吗？",{M:0}]]},
  {dim:"闪现", flash:"text", sec:6, intro:"下面这段话只显示 6 秒，看完会问你一个细节。",
-   content:"周五晚上七点，小林加完班走进楼下的面馆。他本来想点牛肉面，排队时听见前面的人说今天番茄鸡蛋面加双份蛋，犹豫了三秒，最后点了一碗酸菜肉丝面，还多加了一个卤蛋。付款时他发现手机只剩 8% 的电。",
+   content:"周五晚上七点，小林加完本周第三个班，走进楼下的面馆。他本来想点牛肉面，排队时听见前面大哥说今天番茄鸡蛋面加双份蛋，犹豫了三秒，最后点了一碗酸菜肉丝面，还多加了一个卤蛋。付款时他发现手机只剩 8% 的电，而店里唯一的充电宝被一只橘猫压着。",
    text:"小林付款时手机还剩多少电？", opts:[["18%"],["8%"],["3%"],["80%"]], answer:1, w:{M:3,F:2}},
- {dim:"专注", text:"你打开手机准备查个东西，接下来通常会……", opts:[
-   ["查完就关，干脆利落",{F:3}],["顺手刷了几条，然后想起来去查",{F:2}],["刷了四十分钟，忘了自己要查啥",{F:1}],["别问了，我现在就是这个状态",{F:0}]]},
- {dim:"概括", text:"用一句话说说你上周干了啥。哪个最像你？", opts:[
-   ["周二交了报告，周四和朋友吃烤肉，周末睡到中午",{S:3,H:3}],["推进了多项工作，整体节奏稳中有进",{S:1,H:0}],["忙，但说不上来忙了啥",{S:0,H:2}],["在多个维度完成了自我迭代，形成初步闭环",{S:0,H:0}]]},
- {dim:"闪现", flash:"text", sec:6, intro:"再来一段名人名言，6 秒，这次问主旨。",
-   content:"著名思想家尼古拉斯·菲曾经说过：“人的脑子不是硬盘，是一把漏勺。你往里倒得越多、越快，漏得也越快。最后真正留下来的，从来不是你刷过的东西，而是你停下来想过的东西。”",
+ {dim:"专注", text:"你打开手机想查一下明天的天气。40 分钟后，你在……", opts:[
+   ["早查完了，手机都锁屏半小时了",{F:3}],["看完天气顺手刷了两条，还算克制",{F:2}],["在看一个陌生人装修房子的第 17 集",{F:1}],["在研究企鹅为什么不怕冷。天气？什么天气？",{F:0}]]},
+ {dim:"概括", text:"用一句话总结你的上周。哪句最像你说的？", opts:[
+   ["周二交了报告，周四吃了顿烤肉，周末睡到十二点",{S:3,H:3}],["推进了多项工作，整体节奏稳中有进",{S:1,H:0}],["忙。但你要问我忙了啥，我也说不上来",{S:0,H:2}],["在多个维度完成自我迭代，初步形成闭环，赋能下一阶段",{S:0,H:0}]]},
+ {dim:"闪现", flash:"text", sec:6, intro:"一段名人名言，6 秒，这次问主旨。",
+   content:"著名思想家尼古拉斯·菲曾经说过：“人的脑子不是硬盘，是一把漏勺。你往里倒得越多、越快，漏得也越快。最后真正留下来的，从来不是你刷过的东西，而是你停下来想过的东西。”据说他说完这句，就低头继续刷手机了。",
    text:"尼古拉斯·菲这段话的主旨是？", opts:[["人脑容量有限，所以要少看东西"],["能记住的是你停下来想过的，不是你刷过的"],["漏勺比硬盘更好用"],["尼古拉斯·菲是一位著名脑科学家"]], answer:1, w:{S:3,F:1}},
- {dim:"闪现", flash:"words", sec:5, intro:"8 个词，5 秒，记住它们。",
-   content:["火锅","键盘","月亮","雨伞","猫","地铁","咖啡","气球"],
+ {dim:"闪现", flash:"words", sec:5, intro:"8 个词，5 秒，全部记住。",
+   content:["火锅","键盘","月亮","雨伞","橘猫","地铁","奶茶","气球"],
    text:"下面哪个词刚才没出现？", opts:[["雨伞"],["地铁"],["台灯"],["气球"]], answer:2, w:{M:3}},
  {dim:"人味", text:"晚上 11 点，你妈在家族群转了一篇《震惊！隔夜西瓜等于慢性毒药》，然后@你：“你看看这个是真的吗”。你会回……", opts:[
    ["假的妈，包好保鲜膜放冰箱，一两天没事",{H:3,S:3}],["关于隔夜西瓜是否安全，可以从以下几个方面来看：1. 亚硝酸盐含量……",{H:0,S:0}],["发了个「👍」，其实只看了标题",{H:1,S:0}],["已读，想着明天再回，然后忘了",{H:1,F:0}]]},
  {dim:"上下文", text:"最后一题，不许往回翻：第 3 题里，小林最后点了什么面？", opts:[
-   ["牛肉面"],["番茄鸡蛋面"],["酸菜肉丝面"],["他没吃，手机没电了"]], answer:2, w:{M:4}, callback:true},
+   ["牛肉面"],["番茄鸡蛋面"],["酸菜肉丝面"],["没点，去跟橘猫抢充电宝了"]], answer:2, w:{M:4}, callback:true},
 ];
 
 const DIM = {

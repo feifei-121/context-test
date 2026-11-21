@@ -9,13 +9,13 @@
 大模型的上下文一满就得 compact，前面的内容被压成一句“之前我们聊了一些事”。<br>
 最近你是不是也这样：看完就忘，刷完就空，说话越来越像“综上所述”？
 
-<a href="https://feifei-121.github.io/context-test/"><img src="https://img.shields.io/badge/%F0%9F%A7%A0_%E7%82%B9%E6%88%91%E5%BC%80%E6%B5%8B-FF5A36?style=for-the-badge" alt="点我开测"></a>
+<a href="https://feifei-121.github.io/context-test/"><img src="https://img.shields.io/badge/%F0%9F%A7%A0_%E7%82%B9%E6%88%91%E5%BC%80%E6%B5%8B-1F6FEB?style=for-the-badge" alt="点我开测"></a>
 
-![题目](https://img.shields.io/badge/题目-9_道-11968C?style=flat-square)
-![闪现题](https://img.shields.io/badge/闪现题-3_道-FFD447?style=flat-square)
-![结果](https://img.shields.io/badge/结果-−∞_到_+∞-FF5A36?style=flat-square)
-![适配](https://img.shields.io/badge/适配-手机_%7C_电脑-1B2033?style=flat-square)
-![依赖](https://img.shields.io/badge/依赖-零-636A82?style=flat-square)
+![题目](https://img.shields.io/badge/题目-9_道-4AA8FF?style=flat-square)
+![闪现题](https://img.shields.io/badge/闪现题-3_道-0B2545?style=flat-square)
+![结果](https://img.shields.io/badge/结果-−∞_到_+∞-1F6FEB?style=flat-square)
+![适配](https://img.shields.io/badge/适配-手机_%7C_电脑-7CC4FF?style=flat-square)
+![依赖](https://img.shields.io/badge/依赖-零-5A6F8F?style=flat-square)
 
 🔗 **https://feifei-121.github.io/context-test/**
 
@@ -87,7 +87,7 @@
 
 - 一个 `index.html` 文件，纯 HTML + CSS + JavaScript，没有框架，没有构建步骤
 - 部署在 GitHub Pages，推送到 `main` 分支后自动上线
-- 支持手机竖屏和电脑浏览器，跟随系统切换深色和浅色模式
+- 蓝白配色，支持手机竖屏和电脑浏览器，跟随系统切换深色（深海蓝）和浅色（天空白）
 - 系统开启“减弱动态效果”时，干扰动画会自动关闭
 
 ### 本地运行
