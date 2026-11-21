@@ -78,7 +78,7 @@ foot{display:block;text-align:center;font-size:12px;color:var(--muted)}
 .toast{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);transform:translateX(-50%);width:min(340px,calc(100% - 32px));
   background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:10px 14px;display:flex;gap:10px;align-items:center;
   box-shadow:0 10px 30px rgba(0,0,0,.18);font-size:14px;animation:toast 2.6s ease forwards}
-.toast img{width:30px;height:30px}
+.toast .dot{width:28px;height:28px;border-radius:8px;flex:none;background:var(--accent)}
 .toast b{display:block;font-size:12px;color:var(--muted);font-weight:500}
 @keyframes toast{0%{opacity:0;transform:translate(-50%,-30px)}12%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-30px)}}
 .qbar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:-6px 0 2px}
@@ -192,18 +192,18 @@ const TIERS = [
  {min:90, k:"+∞", big:"您真神了", img:"inf", name:"人类原装", say:"没有上下文上限，也没有 AI 味。你可能是最后一批能完整读完一篇文章的人。", tip:"请保持。顺便把链接转给最需要的朋友。", needAll:true},
 ];
 
-const DZ_NOTE=[["phone","系统","你已连续使用手机 3 小时"],["bowl","外卖","您的餐已放在门口，请尽快取餐"],["bell","工作群","[99+ 条] 有人@了你"],
- ["watermelon","妈妈","西瓜别隔夜吃啊！！"],["fries","厉娜","我去吃麦当劳了"],["phone","电量","剩余 18%，请及时充电"],
- ["cat","室友","你看到我的台灯了吗"],["bell","快递","您的包裹已到驿站，取件码 8-3-21"],["fire","热搜","画地为牢 爆"]];
+const DZ_NOTE=[["系统","你已连续使用手机 3 小时"],["外卖","您的餐已放在门口，请尽快取餐"],["工作群","[99+ 条] 有人@了你"],
+ ["妈妈","西瓜别隔夜吃啊！！"],["厉娜","我去吃麦当劳了"],["电量","剩余 18%，请及时充电"],
+ ["室友","你看到我的台灯了吗"],["快递","您的包裹已到驿站，取件码 8-3-21"],["热搜","画地为牢 爆"]];
 const dzLayer=document.getElementById("dz"); let dzTimers=[];
 const rnd=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)];
 function dzClear(){ dzTimers.forEach(x=>{clearInterval(x);clearTimeout(x);}); dzTimers=[]; dzLayer.innerHTML=""; }
-function toast(){ const [ic,who,msg]=pick(DZ_NOTE); const d=document.createElement("div"); d.className="toast";
-  d.innerHTML=`<img src="img/d/${ic}.png" alt=""><span><b>${who} · 刚刚</b>${msg}</span>`;
+function toast(){ const [who,msg]=pick(DZ_NOTE); const d=document.createElement("div"); d.className="toast";
+  d.innerHTML=`<i class="dot"></i><span><b>${who} · 刚刚</b>${msg}</span>`;
   dzLayer.querySelectorAll(".toast").forEach(x=>x.remove()); dzLayer.appendChild(d); setTimeout(()=>d.remove(),2700); }
 function distract(level){ dzClear();
   if(level==="heavy"){ dzTimers.push(setTimeout(toast,600), setInterval(toast,1900)); }
-  else if(Math.random()<.5){ dzTimers.push(setTimeout(toast,rnd(1200,4000))); } }
+ }
 
 const app = document.getElementById("app"), meter = document.getElementById("meter");
 let i = 0, picks = [], timer = null, timeouts = 0, qTimer = null, qTick = null;
