@@ -22,6 +22,13 @@
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
 .wrap{max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.btn.cta{align-self:center;width:auto;position:relative;font-size:22px;padding:18px 56px;border-radius:99px;margin-block:6px;
+  animation:breathe 1.6s ease-in-out infinite}
+.btn.cta::after{content:"";position:absolute;inset:0;border-radius:inherit;border:3px solid var(--accent);animation:ring 1.6s ease-out infinite;pointer-events:none}
+.btn.cta:hover{animation-play-state:paused;transform:scale(1.08) rotate(-2deg)}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes ring{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(1.35,1.6)}}
+@media (max-width:480px){.btn.cta{width:auto;font-size:20px;padding:16px 44px}}
 .topbar{display:flex;justify-content:flex-end}
 .themebtn{font:inherit;font-size:13px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:99px;padding:6px 14px;cursor:pointer}
 .meter{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--muted)}
@@ -225,7 +232,7 @@ function home(){
     <h1>测测你的<span class="k">上下文</span></h1>
     <p>大模型的上下文一满，就得 compact，前面的内容被压成一句“之前我们聊了一些事”。最近你是不是也这样：看完就忘，说话越来越像“综上所述”？</p>
     <p class="note">温馨提示：有闪现题目哦，做好准备~</p>
-    <button class="btn" id="go">开始测试</button>
+    <button class="btn cta" id="go">开始测试 →</button>
     <p class="hint" style="text-align:center">叮咚，您的冬令时解药开始送餐啦~</p></div>`);
   document.getElementById("go").onclick = ()=>{ i=0; picks=[]; timeouts=0; ask(); };
 }
