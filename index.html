@@ -9,15 +9,15 @@
 :root{
   /* Day: butter-yellow and white. Night: soft sky blue. Layout: one centered card column with a context meter on top */
   --bg:#FFF6DA; --card:#FFFFFF; --ink:#3B2F12; --muted:#8C7B52; --line:#F1E2B3;
-  --accent:#E9A100; --accent-ink:#2E2208; --teal:#F6C744; --sun:#FFEDB8; --soft:#FFFBEE; --warn:#E5484D;
+  --accent:#E9A100; --accent-ink:#2E2208; --teal:#F6C744; --sun:#FFEDB8; --soft:#FFFBEE; --warn:#E5484D; --glass:rgba(244,244,246,.9); --glass-ink:#111111; --glass-mute:#7A7A80;
   --display:"ZCOOL KuaiLe","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
   --body:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#1F3B66; --card:#284B80; --ink:#F2F7FF; --muted:#B7CAE8; --line:#3B6098; --accent:#7DB8FF; --accent-ink:#0D2142; --teal:#A8D4FF; --sun:#36609E; --soft:#2D528A; --warn:#FF8E93; color-scheme:dark}}
+  --bg:#1F3B66; --card:#284B80; --ink:#F2F7FF; --muted:#B7CAE8; --line:#3B6098; --accent:#7DB8FF; --accent-ink:#0D2142; --teal:#A8D4FF; --sun:#36609E; --soft:#2D528A; --warn:#FF8E93; --glass:rgba(36,36,40,.88); --glass-ink:#F4F4F6; --glass-mute:#9A9AA2; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#1F3B66; --card:#284B80; --ink:#F2F7FF; --muted:#B7CAE8; --line:#3B6098; --accent:#7DB8FF; --accent-ink:#0D2142; --teal:#A8D4FF; --sun:#36609E; --soft:#2D528A; --warn:#FF8E93; color-scheme:dark}
+  --bg:#1F3B66; --card:#284B80; --ink:#F2F7FF; --muted:#B7CAE8; --line:#3B6098; --accent:#7DB8FF; --accent-ink:#0D2142; --teal:#A8D4FF; --sun:#36609E; --soft:#2D528A; --warn:#FF8E93; --glass:rgba(36,36,40,.88); --glass-ink:#F4F4F6; --glass-mute:#9A9AA2; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
@@ -83,12 +83,17 @@ textarea{width:100%;font:inherit;font-size:14px;border-radius:10px;border:1px so
 .compact{font-family:var(--mono);font-size:14px;color:var(--muted);min-height:120px;white-space:pre-line}
 foot{display:block;text-align:center;font-size:12px;color:var(--muted)}
 #dz{position:fixed;inset:0;pointer-events:none;z-index:20;overflow:hidden}
-.toast{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);transform:translateX(-50%);width:min(340px,calc(100% - 32px));
-  background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:10px 14px;display:flex;gap:10px;align-items:center;
-  box-shadow:0 10px 30px rgba(0,0,0,.18);font-size:14px;animation:toast 2.6s ease forwards}
-.toast .dot{width:28px;height:28px;border-radius:8px;flex:none;background:var(--accent)}
-.toast b{display:block;font-size:12px;color:var(--muted);font-weight:500}
-@keyframes toast{0%{opacity:0;transform:translate(-50%,-30px)}12%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-30px)}}
+.toast{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 10px);transform:translateX(-50%);width:min(370px,calc(100% - 20px));
+  background:var(--glass);color:var(--glass-ink);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
+  border-radius:20px;padding:11px 14px;display:flex;gap:11px;align-items:center;box-shadow:0 8px 28px rgba(0,0,0,.18);
+  font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;animation:toast 2.8s cubic-bezier(.2,.9,.3,1) forwards}
+.toast .appic{flex:none;width:38px;height:38px;border-radius:9px;background:#2DC100;display:grid;place-items:center}
+.toast .appic svg{width:26px;height:26px}
+.toast .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.toast .tp{display:flex;justify-content:space-between;font-size:12px;color:var(--glass-mute)}
+.toast b{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast p{margin:0;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@keyframes toast{0%{opacity:0;transform:translate(-50%,-120%)}10%,82%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-120%)}}
 .qbar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:-6px 0 2px}
 .qbar i{display:block;height:100%;width:100%;background:var(--accent);animation:qdrain var(--qs,10s) linear forwards}
 @keyframes qdrain{0%{width:100%;background:var(--accent)}69%{background:var(--accent)}70%{background:var(--warn)}100%{width:0;background:var(--warn)}}
@@ -203,14 +208,14 @@ const TIERS = [
  {min:90, k:"+∞", big:"您真神了", img:"inf", name:"人类原装", say:"没有上下文上限，也没有 AI 味。你可能是最后一批能完整读完一篇文章的人。", tip:"请保持。顺便把链接转给最需要的朋友。", needAll:true},
 ];
 
-const DZ_NOTE=[["系统","你已连续使用手机 3 小时"],["外卖","您的餐已放在门口，请尽快取餐"],["工作群","[99+ 条] 有人@了你"],
- ["妈妈","西瓜别隔夜吃啊！！"],["厉娜","我去吃麦当劳了"],["电量","剩余 18%，请及时充电"],
- ["室友","你看到我的台灯了吗"],["快递","您的包裹已到驿站，取件码 8-3-21"],["热搜","画地为牢 爆"]];
+const DZ_NOTE=[["相亲相爱一家人","妈妈：[链接] 震惊！隔夜西瓜千万别再吃了"],["工作群 (99+)","老板：@所有人 明早九点开会，收到请回复"],
+ ["厉娜","我去吃麦当劳了"],["室友","你看到我的台灯了吗"],["小王","[语音] 60\""],["妈妈","你手机电量是不是只剩 18% 了？快去充电"],
+ ["吃瓜群","[3条] 画地为牢又上热搜了"],["文件传输助手","[图片]"],["外卖骑手","您好，您的餐放门口了哈"]];
 const dzLayer=document.getElementById("dz"); let dzTimers=[];
 const rnd=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)];
 function dzClear(){ dzTimers.forEach(x=>{clearInterval(x);clearTimeout(x);}); dzTimers=[]; dzLayer.innerHTML=""; }
 function toast(){ const [who,msg]=pick(DZ_NOTE); const d=document.createElement("div"); d.className="toast";
-  d.innerHTML=`<i class="dot"></i><span><b>${who} · 刚刚</b>${msg}</span>`;
+  d.innerHTML=`<i class="appic"><svg viewBox="0 0 26 26" fill="#fff"><ellipse cx="10" cy="10" rx="8.5" ry="7"/><path d="M4 15l-1 4 4-2z"/><ellipse cx="17.5" cy="16" rx="7" ry="5.8" fill="#fff" stroke="#2DC100" stroke-width="1.4"/></svg></i><div class="tx"><div class="tp"><span>消息</span><span>现在</span></div><b>${who}</b><p>${msg}</p></div>`;
   dzLayer.querySelectorAll(".toast").forEach(x=>x.remove()); dzLayer.appendChild(d); setTimeout(()=>d.remove(),2700); }
 function distract(level){ dzClear();
   if(level==="heavy"){ dzTimers.push(setTimeout(toast,600), setInterval(toast,1900)); }
