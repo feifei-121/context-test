@@ -7,22 +7,23 @@
 <style>
 /* Layout: one centered card column, a "token meter" pinned on top like a model's context bar */
 :root{
-  --bg:#EEF5FF; --card:#FFFFFF; --ink:#0B2545; --muted:#5A6F8F; --line:#D3E3F7;
-  --accent:#1F6FEB; --accent-ink:#FFFFFF; --teal:#4AA8FF; --sun:#DCEBFF; --soft:#F5F9FF; --warn:#F2545B;
+  /* Day: butter-yellow and white. Night: soft sky blue. Layout: one centered card column with a context meter on top */
+  --bg:#FFF6DA; --card:#FFFFFF; --ink:#3B2F12; --muted:#8C7B52; --line:#F1E2B3;
+  --accent:#E9A100; --accent-ink:#2E2208; --teal:#F6C744; --sun:#FFEDB8; --soft:#FFFBEE; --warn:#E5484D;
   --display:"ZCOOL KuaiLe","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
   --body:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#081426; --card:#0F2140; --ink:#EAF2FF; --muted:#8FA6C6; --line:#20375C;
-  --accent:#4D94FF; --accent-ink:#04122A; --teal:#7CC4FF; --sun:#1A3A6B; --soft:#142A4C; --warn:#FF7378; color-scheme:dark}}
+  --bg:#1F3B66; --card:#284B80; --ink:#F2F7FF; --muted:#B7CAE8; --line:#3B6098; --accent:#7DB8FF; --accent-ink:#0D2142; --teal:#A8D4FF; --sun:#36609E; --soft:#2D528A; --warn:#FF8E93; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#081426; --card:#0F2140; --ink:#EAF2FF; --muted:#8FA6C6; --line:#20375C;
-  --accent:#4D94FF; --accent-ink:#04122A; --teal:#7CC4FF; --sun:#1A3A6B; --soft:#142A4C; --warn:#FF7378; color-scheme:dark}
+  --bg:#1F3B66; --card:#284B80; --ink:#F2F7FF; --muted:#B7CAE8; --line:#3B6098; --accent:#7DB8FF; --accent-ink:#0D2142; --teal:#A8D4FF; --sun:#36609E; --soft:#2D528A; --warn:#FF8E93; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
 .wrap{max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.topbar{display:flex;justify-content:flex-end}
+.themebtn{font:inherit;font-size:13px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:99px;padding:6px 14px;cursor:pointer}
 .meter{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--muted)}
 .meter .bar{flex:1;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
 .meter .fill{height:100%;width:0;background:var(--teal);transition:width .5s ease}
@@ -51,7 +52,7 @@ button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 .opt .l{font-family:var(--mono);font-weight:700;color:var(--accent);flex:none}
 .opt.picked{background:color-mix(in srgb,var(--accent) 14%,var(--card));border-color:var(--accent)}
 .qnum{display:flex;justify-content:space-between;align-items:center}
-.tag{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:6px;background:var(--sun);color:var(--accent)}
+.tag{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:6px;background:var(--sun);color:var(--ink)}
 .tag.t{background:var(--teal);color:var(--card)}
 .flash{background:var(--soft);border:1.5px dashed var(--line);border-radius:14px;padding:18px;font-size:16px;line-height:1.85}
 .words{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;font-size:20px;font-family:var(--display)}
@@ -140,6 +141,7 @@ foot{display:block;text-align:center;font-size:12px;color:var(--muted)}
 </style>
 
 <div class="wrap">
+  <div class="topbar"><button class="themebtn" id="themebtn" type="button">夜间模式</button></div>
   <div class="meter" id="meter" hidden><span>上下文已用</span><div class="bar"><div class="fill" id="fill"></div></div><b id="tok">0k</b></div>
   <div class="card" id="app"></div>
   <foot>纯属娱乐，如有雷同免费获取作者电子签名一张~</foot>
@@ -335,6 +337,13 @@ function result(){
   document.getElementById("again").onclick=()=>{ Q.forEach(q=>delete q._shown); home(); };
 }
 
+(function(){ const root=document.documentElement, btn=document.getElementById("themebtn");
+  try{ const t=localStorage.getItem("ctx-theme"); if(t==="light"||t==="dark") root.dataset.theme=t; }catch(e){}
+  const isDark=()=>root.dataset.theme? root.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  const label=()=>{ btn.textContent=isDark()?"☀ 白天模式":"☾ 夜间模式"; };
+  btn.onclick=()=>{ const t=isDark()?"light":"dark"; root.dataset.theme=t; try{ localStorage.setItem("ctx-theme",t); }catch(e){} label(); };
+  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",label); label();
+})();
 home();
 </script>
 
