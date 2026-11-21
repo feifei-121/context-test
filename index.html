@@ -171,13 +171,13 @@ const DIM = {
 };
 
 const TIERS = [
- {min:-1, k:"−∞", img:"neg", name:"幻觉体", say:"你的上下文已经是负数了。不只是记不住，是开始自己编。问你昨天吃了什么，你能讲出三个版本，每个都很有画面感。", tip:"今晚先别测了，断网睡一觉。"},
+ {min:-1, k:"−∞", big:"魔了", img:"neg", name:"幻觉体", say:"你的上下文已经是负数了。不只是记不住，是开始自己编。问你昨天吃了什么，你能讲出三个版本，每个都很有画面感。", tip:"今晚先别测了，断网睡一觉。"},
  {min:15, k:"4K", img:"4k", name:"金鱼型", say:"窗口 4K，聊三句就要 compact。你不是不努力，是每条消息都只看了前两行。", tip:"今天挑一件小事，从头做到尾，比如吃一顿不看手机的饭。"},
  {min:30, k:"32K", img:"32k", name:"便签型", say:"能装下一段对话，装不下一整天。重要的事不写下来，就跟没发生过一样。", tip:"睡前用三句大白话说说今天干了啥，别用“推进”和“对齐”。"},
  {min:45, k:"128K", img:"128k", name:"标准版", say:"主流配置，日常够用。偶尔掉帧，比如刚放下手机就忘了刚才看的是什么。", tip:"少开几个标签页，脑子里那些也算。"},
  {min:60, k:"256K", img:"256k", name:"长文本型", say:"能读完长文，还能说出重点。放在今天，这已经算稀有配置了。", tip:"小心群消息，它们会一点点稀释你的窗口。"},
  {min:75, k:"1M", img:"1m", name:"档案馆型", say:"细节、主旨、前情提要你全都记得。朋友吵架翻旧账的时候，你是最可怕的那个。", tip:"把这个测试转给你身边的金鱼。"},
- {min:90, k:"+∞", img:"inf", name:"人类原装", say:"没有上下文上限，也没有 AI 味。你可能是最后一批能完整读完一篇文章的人。", tip:"请保持。顺便把链接转给最需要的朋友。", needAll:true},
+ {min:90, k:"+∞", big:"神了", img:"inf", name:"人类原装", say:"没有上下文上限，也没有 AI 味。你可能是最后一批能完整读完一篇文章的人。", tip:"请保持。顺便把链接转给最需要的朋友。", needAll:true},
 ];
 
 const DZ_IMG=["cyclone","watermelon","cat","fire","phone","bowl","bell","fries","burger"];
@@ -306,8 +306,8 @@ function result(){
   </div>`);
   const big=document.getElementById("bigk"), ks=TIERS.map(x=>x.k); let n=0;
   const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if(reduce){ big.textContent=t.k; } else { const iv=setInterval(()=>{ big.textContent=ks[n++%ks.length];
-    if(n>13){ clearInterval(iv); big.textContent=t.k; big.classList.add("land"); } },70); }
+  if(reduce){ big.textContent=t.big||t.k; } else { const iv=setInterval(()=>{ big.textContent=ks[n++%ks.length];
+    if(n>13){ clearInterval(iv); big.textContent=t.big||t.k; big.classList.add("land"); } },70); }
   document.getElementById("copy").onclick=()=>{
     const ta=document.getElementById("sharetxt"), ok=()=>document.getElementById("copied").hidden=false;
     try{ navigator.clipboard.writeText(share).then(ok,()=>{ta.select();ok();}); }catch(e){ ta.select(); ok(); }
