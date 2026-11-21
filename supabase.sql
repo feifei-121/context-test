@@ -22,6 +22,10 @@ create table if not exists public.plays (
 -- 你自己在 Supabase 后台的 Table Editor 里可以看到全部数据。
 alter table public.plays enable row level security;
 
+-- 新项目默认不给网页角色任何表权限：只开放“新增”
+revoke all on public.plays from anon;
+grant insert on public.plays to anon;
+
 drop policy if exists "anyone can submit a play" on public.plays;
 create policy "anyone can submit a play"
   on public.plays for insert
