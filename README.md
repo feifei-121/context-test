@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="img/128k.png" width="120" alt="大脑">
+<img src="img/128k.svg" width="120" alt="大脑">
 
 # 测测你的上下文
 
@@ -38,13 +38,13 @@
 
 <table>
 <tr>
-<td align="center" width="14%"><img src="img/neg.png" width="64"><br><b>−∞</b><br>幻觉体</td>
-<td align="center" width="14%"><img src="img/4k.png" width="64"><br><b>4K</b><br>金鱼型</td>
-<td align="center" width="14%"><img src="img/32k.png" width="64"><br><b>32K</b><br>便签型</td>
-<td align="center" width="14%"><img src="img/128k.png" width="64"><br><b>128K</b><br>标准版</td>
-<td align="center" width="14%"><img src="img/256k.png" width="64"><br><b>256K</b><br>长文本型</td>
-<td align="center" width="14%"><img src="img/1m.png" width="64"><br><b>1M</b><br>档案馆型</td>
-<td align="center" width="14%"><img src="img/inf.png" width="64"><br><b>+∞</b><br>人类原装</td>
+<td align="center" width="14%"><img src="img/neg.svg" width="64"><br><b>−∞</b><br>幻觉体</td>
+<td align="center" width="14%"><img src="img/4k.svg" width="64"><br><b>4K</b><br>金鱼型</td>
+<td align="center" width="14%"><img src="img/32k.svg" width="64"><br><b>32K</b><br>便签型</td>
+<td align="center" width="14%"><img src="img/128k.svg" width="64"><br><b>128K</b><br>标准版</td>
+<td align="center" width="14%"><img src="img/256k.svg" width="64"><br><b>256K</b><br>长文本型</td>
+<td align="center" width="14%"><img src="img/1m.svg" width="64"><br><b>1M</b><br>档案馆型</td>
+<td align="center" width="14%"><img src="img/inf.svg" width="64"><br><b>+∞</b><br>人类原装</td>
 </tr>
 </table>
 
@@ -102,7 +102,7 @@ open index.html        # macOS，或者直接双击 index.html
 
 ## 🎨 素材与版权
 
-- 所有插图来自 [Microsoft Fluent Emoji](https://github.com/microsoft/fluentui-emoji)，MIT 许可，许可证原文见 [`img/LICENSE-fluent-emoji.txt`](img/LICENSE-fluent-emoji.txt)
+- 七种人格的插图是本项目用代码手绘的 SVG 线条图，颜色会跟着白天和夜间模式变化，没有使用任何第三方图片
 - 字体：[ZCOOL KuaiLe](https://fonts.google.com/specimen/ZCOOL+KuaiLe)、[JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono)，来自 Google Fonts，SIL Open Font License
 - 题目里的“尼古拉斯·菲”纯属虚构，如有雷同，算你记性好
 

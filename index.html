@@ -114,6 +114,8 @@ foot{display:block;text-align:center;font-size:12px;color:var(--muted)}
 @keyframes dishin{from{opacity:0;transform:translateY(10px) scale(.96)}}
 .phone .go{margin:12px;padding:10px;border-radius:99px;background:var(--accent);color:var(--accent-ink);text-align:center;font-weight:700;font-size:14px}
 .hero-img{width:150px;height:150px;align-self:center}
+.ic{width:100%;height:100%;fill:none;stroke:var(--ink);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.ic .f1{fill:var(--sun)} .ic .f2{fill:var(--accent)} .ic .f3{fill:var(--teal)} .ic .k{fill:var(--ink)}
 .reveal .hero-img{animation:pop 1s cubic-bezier(.2,1.5,.4,1) both}
 @keyframes pop{0%{transform:scale(.2) rotate(-200deg);filter:blur(10px);opacity:0}60%{opacity:1}100%{transform:none;filter:none}}
 .reveal .big{text-align:center}
@@ -214,6 +216,7 @@ function distract(level){ dzClear();
   if(level==="heavy"){ dzTimers.push(setTimeout(toast,600), setInterval(toast,1900)); }
  }
 
+const ICONS={"neg": "<circle class=\"f1\" cx=\"60\" cy=\"60\" r=\"44\"/><path d=\"M42 50a2 2 0 0 1 4 0a4 4 0 0 1-8 0a6 6 0 0 1 12 0a8 8 0 0 1-16 0\"/><path d=\"M74 50a2 2 0 0 1 4 0a4 4 0 0 1-8 0a6 6 0 0 1 12 0a8 8 0 0 1-16 0\"/><path d=\"M38 80q5.5-7 11 0t11 0t11 0t11 0\"/><path d=\"M96 22l6-6M100 30h8M90 16v-8\"/>", "4k": "<path class=\"f2\" d=\"M24 62C36 36 76 36 88 62C76 88 36 88 24 62Z\"/><path class=\"f2\" d=\"M88 62L108 44L103 62L108 80Z\"/><circle class=\"k\" cx=\"42\" cy=\"58\" r=\"3.5\"/><path d=\"M56 48q6 14 0 28\"/><path d=\"M60 40l6-8 6 8\"/><circle cx=\"20\" cy=\"34\" r=\"4\"/><circle cx=\"12\" cy=\"20\" r=\"6\"/><path d=\"M36 68q4 3 8 0\"/>", "32k": "<g transform=\"rotate(-7 60 60)\"><path class=\"f1\" d=\"M26 22H94V78L76 96H26Z\"/><path class=\"f2\" d=\"M94 78H76V96Z\"/><path d=\"M38 44H80M38 58H74M38 72H60\"/></g><circle class=\"f2\" cx=\"60\" cy=\"18\" r=\"6\"/>", "128k": "<path class=\"f3\" d=\"M60 26C48 18 30 24 30 40C18 44 18 62 28 68C24 84 40 94 52 88C56 96 64 96 68 88C80 94 96 84 92 68C102 62 102 44 90 40C90 24 72 18 60 26Z\"/><path d=\"M60 28V88M44 42q9 4 4 14M76 42q-9 4-4 14M40 70q9-3 12 6M80 70q-9-3-12 6\"/>", "256k": "<rect class=\"f1\" x=\"30\" y=\"26\" width=\"60\" height=\"68\"/><rect class=\"f2\" x=\"22\" y=\"18\" width=\"76\" height=\"14\" rx=\"7\"/><rect class=\"f2\" x=\"22\" y=\"88\" width=\"76\" height=\"14\" rx=\"7\"/><path d=\"M40 44H80M40 54H80M40 64H76M40 74H66\"/>", "1m": "<path class=\"f1\" d=\"M42 26l4-12h28l4 12\"/><rect class=\"f2\" x=\"30\" y=\"24\" width=\"60\" height=\"84\" rx=\"6\"/><rect class=\"f1\" x=\"38\" y=\"32\" width=\"44\" height=\"32\" rx=\"3\"/><rect class=\"f1\" x=\"38\" y=\"70\" width=\"44\" height=\"32\" rx=\"3\"/><path d=\"M52 48H68M52 86H68\"/>", "inf": "<path class=\"f2\" d=\"M60 22L70 48.2L98 49.6L76.2 67.3L83.5 94.4L60 79L36.5 94.4L43.8 67.3L22 49.6L50 48.2Z\"/><circle class=\"k\" cx=\"52\" cy=\"60\" r=\"2.5\"/><circle class=\"k\" cx=\"68\" cy=\"60\" r=\"2.5\"/><path d=\"M53 68q7 6 14 0\"/><path d=\"M102 16v14M95 23h14M16 86v10M11 91h10M100 96l4 4\"/>"};
 const app = document.getElementById("app"), meter = document.getElementById("meter");
 let i = 0, picks = [], timer = null, timeouts = 0, qTimer = null, qTick = null;
 const QSEC = 10;
@@ -320,7 +323,7 @@ function result(){
   if(picks[1]===0 && !cbOk) extra.push("你说记得昨天的蘸料，却忘了 5 分钟前的面。这就是幻觉的样子。");
   el(`<div class="stack reveal">
     <span class="eyebrow center">你的上下文窗口</span>
-    <img class="hero-img" src="img/${t.img}.png" alt="${t.name}">
+    <div class="hero-img" role="img" aria-label="${t.name}"><svg class="ic" viewBox="0 0 120 120">${ICONS[t.img]}</svg></div>
     <div class="big" id="bigk">?K</div>
     <h2 class="rise center" style="--d:0">${t.name}</h2>
     <div class="code rise center" style="--d:1" title="记忆/专注/概括/人味">${r.code}</div>
