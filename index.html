@@ -74,6 +74,28 @@ button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 textarea{width:100%;font:inherit;font-size:14px;border-radius:10px;border:1px solid var(--line);background:var(--soft);color:var(--ink);padding:10px}
 .compact{font-family:var(--mono);font-size:14px;color:var(--muted);min-height:120px;white-space:pre-line}
 foot{display:block;text-align:center;font-size:12px;color:var(--muted)}
+@media (min-width:900px){
+  body{padding-block:48px 64px}
+  .wrap{max-width:760px;gap:20px}
+  .card{padding:44px 52px;border-radius:24px}
+  h2{font-size:30px}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .opt{padding:18px 18px}
+  .flash{font-size:18px;padding:24px}
+  .words{font-size:24px}
+  .btn{align-self:flex-start;padding:15px 32px}
+  .row-btns .btn{align-self:auto}
+}
+@media (max-width:480px){
+  body{padding-block:12px 32px;font-size:15px}
+  .card{padding:22px 18px;border-radius:16px}
+  h2{font-size:22px}
+  .opt{padding:14px;font-size:15px;min-height:52px}
+  .flash{padding:14px;font-size:15px;line-height:1.8}
+  .words{font-size:17px;gap:6px}
+  .big{font-size:76px}
+  .btn{width:100%}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -95,11 +117,11 @@ const Q = [
    ["查完就关，干脆利落",{F:3}],["顺手刷了几条，然后想起来去查",{F:2}],["刷了四十分钟，忘了自己要查啥",{F:1}],["别问了，我现在就是这个状态",{F:0}]]},
  {dim:"概括", text:"用一句话说说你上周干了啥。哪个最像你？", opts:[
    ["周二交了报告，周四和朋友吃烤肉，周末睡到中午",{S:3,H:3}],["推进了多项工作，整体节奏稳中有进",{S:1,H:0}],["忙，但说不上来忙了啥",{S:0,H:2}],["在多个维度完成了自我迭代，形成初步闭环",{S:0,H:0}]]},
- {dim:"闪现", flash:"text", sec:6, intro:"再来一段，6 秒，这次问主旨。",
-   content:"很多人觉得自己记性变差了，其实问题常常不在记忆本身。一天切换几十次应用，每条信息只看前两行，大脑没机会把内容放进长期记忆，自然什么都留不下。与其买补脑的东西，不如每天留出一段不被打断的时间，完整地读完一件事。",
-   text:"这段话主要想说什么？", opts:[["记性变差主要是年纪大了"],["频繁切换让信息留不下来，需要整块不被打断的时间"],["补脑产品对记忆帮助很大"],["应该少玩手机多睡觉"]], answer:1, w:{S:3,F:1}},
- {dim:"专注", text:"朋友给你发来一条 60 秒的语音，你会……", opts:[
-   ["从头听到尾",{F:3}],["转文字扫一眼",{F:2}],["听到一半去干别的了",{F:1}],["回了句“嗯嗯”，其实没听",{F:0,H:1}]]},
+ {dim:"闪现", flash:"text", sec:6, intro:"再来一段名人名言，6 秒，这次问主旨。",
+   content:"著名思想家尼古拉斯·菲曾经说过：“人的脑子不是硬盘，是一把漏勺。你往里倒得越多、越快，漏得也越快。最后真正留下来的，从来不是你刷过的东西，而是你停下来想过的东西。”",
+   text:"尼古拉斯·菲这段话的主旨是？", opts:[["人脑容量有限，所以要少看东西"],["能记住的是你停下来想过的，不是你刷过的"],["漏勺比硬盘更好用"],["尼古拉斯·菲是一位著名脑科学家"]], answer:1, w:{S:3,F:1}},
+ {dim:"冲浪", text:"最近很火的“画地为牢”，你第一次刷到的时候……", opts:[
+   ["秒懂，还顺手造了句：我画地为牢，工位",{H:3,M:3,F:2}],["知道是综艺里出来的，谁对谁说的忘了",{H:2,M:1,F:2}],["没看懂，先去问了 AI",{H:0,M:1,F:1}],["刷到了，划走了，现在才知道是个梗",{H:1,M:0,F:0}]]},
  {dim:"闪现", flash:"words", sec:5, intro:"8 个词，5 秒，记住它们。",
    content:["火锅","键盘","月亮","雨伞","猫","地铁","咖啡","气球"],
    text:"下面哪个词刚才没出现？", opts:[["雨伞"],["地铁"],["台灯"],["气球"]], answer:2, w:{M:3}},
@@ -137,7 +159,7 @@ function setMeter(){ meter.hidden=false; const p=i/Q.length;
 function home(){
   meter.hidden = true;
   el(`<div class="stack">
-    <span class="eyebrow">Context Window Test · 9 题</span>
+    <span class="eyebrow">Context Window Test</span>
     <h1>测测你的<span class="k">上下文</span></h1>
     <p>大模型的上下文一满，就得 compact，前面的内容被压成一句“之前我们聊了一些事”。最近你是不是也这样：看完就忘，说话越来越像“综上所述”？</p>
     <p class="note">温馨提示：有闪现题目哦，做好准备~</p>
@@ -198,7 +220,7 @@ function score(){
 
 function compacting(){
   meter.hidden=true;
-  const lines=["正在读取你的 9 条回答…","检测到上下文接近上限","正在 compact 前文…","之前我们聊了一些事。","正在估算窗口大小…"];
+  const lines=["正在读取你的回答…","检测到上下文接近上限","正在 compact 前文…","之前我们聊了一些事。","正在估算窗口大小…"];
   el(`<div class="stack"><span class="eyebrow">Processing</span><div class="compact" id="log"></div></div>`);
   const log=document.getElementById("log"); let n=0;
   const t=setInterval(()=>{ log.textContent+=(n?"\n":"")+"> "+lines[n]; n++; if(n>=lines.length){ clearInterval(t); setTimeout(result,500); } },420);
