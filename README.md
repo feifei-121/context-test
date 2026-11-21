@@ -11,8 +11,8 @@
 
 <a href="https://feifei-121.github.io/context-test/"><img src="https://img.shields.io/badge/%F0%9F%A7%A0_%E7%82%B9%E6%88%91%E5%BC%80%E6%B5%8B-1F6FEB?style=for-the-badge" alt="点我开测"></a>
 
-![题目](https://img.shields.io/badge/题目-9_道-4AA8FF?style=flat-square)
-![闪现题](https://img.shields.io/badge/闪现题-3_道-0B2545?style=flat-square)
+![题目](https://img.shields.io/badge/题目-10_道-4AA8FF?style=flat-square)
+![闪现题](https://img.shields.io/badge/闪现题-4_道-0B2545?style=flat-square)
 ![结果](https://img.shields.io/badge/结果-−∞_到_+∞-1F6FEB?style=flat-square)
 ![适配](https://img.shields.io/badge/适配-手机_%7C_电脑-7CC4FF?style=flat-square)
 ![依赖](https://img.shields.io/badge/依赖-零-5A6F8F?style=flat-square)
@@ -28,7 +28,7 @@
 一个转给朋友玩的娱乐测试，仿照 MBTI 人格测试的形式，测的是你的**上下文窗口**：
 
 - 🧠 **记忆**：昨天的晚饭、五分钟前读过的那段话，还在吗？
-- 🎯 **专注**：屏幕上有东西在飘、手机在弹通知、倒计时在走，你还能看进去吗？
+- 🎯 **专注**：手机通知在弹、倒计时在走，你还能看进去吗？
 - ✂️ **概括**：能不能一句话说出重点，而不是“推进了多项工作”？
 - 🗣️ **人味**：你说话还像人，还是开始自带“以下是三点建议”了？
 
@@ -75,7 +75,8 @@
 | :--- | :--- |
 | ⚡ **闪现阅读** | 一段文字或一组词只出现 5 到 6 秒，看完再答题 |
 | 🔁 **回溯题** | 最后一题会突然问你前面某题的细节，测前文有没有被 compact 掉 |
-| 🌀 **干扰模式** | 答题时屏幕上会飘过转圈的西瓜、汉堡和猫，顶部弹出假通知 |
+| 📱 **手机闪现题** | 你拿着别人的手机点外卖，一道道菜被否决，真正要记的东西藏在别处 |
+| 🔔 **干扰模式** | 答题时顶部会不停弹出假通知，有些还故意误导你 |
 | ⏱️ **每题 10 秒** | 顶部倒计时进度条，最后 3 秒变红，超时直接算你 compact 掉了 |
 | 🔥 **热梗题** | 第一题就是最近很火的“画地为牢”，不过问题藏在一堆废话后面 |
 | 🎰 **人格揭晓** | 档位数字滚动停下，人格图旋转出场 |

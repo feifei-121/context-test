@@ -75,10 +75,6 @@ textarea{width:100%;font:inherit;font-size:14px;border-radius:10px;border:1px so
 .compact{font-family:var(--mono);font-size:14px;color:var(--muted);min-height:120px;white-space:pre-line}
 foot{display:block;text-align:center;font-size:12px;color:var(--muted)}
 #dz{position:fixed;inset:0;pointer-events:none;z-index:20;overflow:hidden}
-.floater{position:absolute;width:var(--s,64px);height:auto;animation:drift var(--t,4s) linear forwards}
-.floater.spin{animation:drift var(--t,4s) linear forwards,spin .9s linear infinite}
-@keyframes drift{0%{opacity:0;translate:0 0}10%{opacity:.95}85%{opacity:.95}100%{opacity:0;translate:var(--dx,0) var(--dy,-120px)}}
-@keyframes spin{to{rotate:360deg}}
 .toast{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);transform:translateX(-50%);width:min(340px,calc(100% - 32px));
   background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:10px 14px;display:flex;gap:10px;align-items:center;
   box-shadow:0 10px 30px rgba(0,0,0,.18);font-size:14px;animation:toast 2.6s ease forwards}
@@ -93,6 +89,22 @@ foot{display:block;text-align:center;font-size:12px;color:var(--muted)}
 .qsec{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums;color:var(--muted)}
 .qsec.hot{color:var(--warn)}
 .timeout{color:var(--warn);font-family:var(--display);font-size:22px;text-align:center}
+.phone{width:min(290px,100%);margin:0 auto;border:9px solid var(--ink);border-radius:34px;background:var(--soft);overflow:hidden}
+.phone .sb{display:flex;justify-content:space-between;align-items:center;padding:8px 16px 4px;font-family:var(--mono);font-size:10px;color:var(--muted)}
+.phone .bat{display:flex;align-items:center;gap:3px;opacity:.75}
+.phone .bat i{font-style:normal;font-size:8px}
+.phone .bat b{display:inline-block;width:15px;height:7px;border:1px solid currentColor;border-radius:2px;position:relative}
+.phone .bat b::after{content:"";position:absolute;left:1px;top:1px;bottom:1px;width:23%;background:currentColor}
+.phone .hd{padding:6px 14px 10px;font-weight:700;font-size:15px}
+.phone .hd small{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+.dishes{display:flex;flex-direction:column;gap:8px;padding:0 12px;min-height:228px}
+.dish{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 12px;display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:14px;animation:dishin .3s ease both}
+.dish em{font-style:normal;font-size:12px;color:var(--warn);text-align:right}
+.dish.no{opacity:.55}
+.dish.yes{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--card))}
+.dish.yes em{color:var(--accent);font-weight:700}
+@keyframes dishin{from{opacity:0;transform:translateY(10px) scale(.96)}}
+.phone .go{margin:12px;padding:10px;border-radius:99px;background:var(--accent);color:var(--accent-ink);text-align:center;font-weight:700;font-size:14px}
 .hero-img{width:150px;height:150px;align-self:center}
 .reveal .hero-img{animation:pop 1s cubic-bezier(.2,1.5,.4,1) both}
 @keyframes pop{0%{transform:scale(.2) rotate(-200deg);filter:blur(10px);opacity:0}60%{opacity:1}100%{transform:none;filter:none}}
@@ -146,6 +158,9 @@ const Q = [
    text:"小林付款时手机还剩多少电？", opts:[["18%"],["8%"],["3%"],["80%"]], answer:1, w:{M:3,F:2}},
  {dim:"专注", text:"你打开手机想查一下明天的天气。40 分钟后，你在……", opts:[
    ["早查完了，手机都锁屏半小时了",{F:3}],["看完天气顺手刷了两条，还算克制",{F:2}],["在看一个陌生人装修房子的第 17 集",{F:1}],["在研究企鹅为什么不怕冷。天气？什么天气？",{F:0}]]},
+ {dim:"闪现", flash:"phone", sec:9, intro:"注意！此时此刻，你正拿着菲飞肥的手机帮忙点外卖。请盯紧下单的瞬间！",
+   content:[["麻辣烫","昨天刚吃过"],["螺蛳粉","室友会把我赶出去"],["炸鸡","减肥第三天，忍住"],["沙拉","吃完半小时就饿"],["猪脚饭","要等 58 分钟"],["番茄鸡蛋面","就它了，下单！",true]],
+   text:"刚才菲飞肥的手机还剩多少电？", opts:[["32%"],["23%"],["8%"],["没注意，我光顾着看点了啥"]], answer:1, w:{F:3,M:1}},
  {dim:"概括", text:"用一句话总结你的上周。哪句最像你说的？", opts:[
    ["周二交了报告，周四吃了顿烤肉，周末睡到十二点",{S:3,H:3}],["推进了多项工作，整体节奏稳中有进",{S:1,H:0}],["忙。但你要问我忙了啥，我也说不上来",{S:0,H:2}],["在多个维度完成自我迭代，初步形成闭环，赋能下一阶段",{S:0,H:0}]]},
  {dim:"闪现", flash:"text", sec:6, intro:"一段名人名言，6 秒，这次问主旨。",
@@ -177,23 +192,18 @@ const TIERS = [
  {min:90, k:"+∞", big:"神了", img:"inf", name:"人类原装", say:"没有上下文上限，也没有 AI 味。你可能是最后一批能完整读完一篇文章的人。", tip:"请保持。顺便把链接转给最需要的朋友。", needAll:true},
 ];
 
-const DZ_IMG=["cyclone","watermelon","cat","fire","phone","bowl","bell","fries","burger"];
 const DZ_NOTE=[["phone","系统","你已连续使用手机 3 小时"],["bowl","外卖","您的餐已放在门口，请尽快取餐"],["bell","工作群","[99+ 条] 有人@了你"],
  ["watermelon","妈妈","西瓜别隔夜吃啊！！"],["fries","厉娜","我去吃麦当劳了"],["phone","电量","剩余 18%，请及时充电"],
  ["cat","室友","你看到我的台灯了吗"],["bell","快递","您的包裹已到驿站，取件码 8-3-21"],["fire","热搜","画地为牢 爆"]];
 const dzLayer=document.getElementById("dz"); let dzTimers=[];
 const rnd=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)];
 function dzClear(){ dzTimers.forEach(x=>{clearInterval(x);clearTimeout(x);}); dzTimers=[]; dzLayer.innerHTML=""; }
-function floater(){ const im=new Image(); im.src="img/d/"+pick(DZ_IMG)+".png"; im.alt="";
-  im.className="floater"+(Math.random()<.6?" spin":"");
-  const t=rnd(3,6); im.style.cssText=`left:${rnd(-5,90)}%;top:${rnd(5,85)}%;--s:${rnd(44,96)}px;--t:${t}s;--dx:${rnd(-160,160)}px;--dy:${rnd(-220,120)}px`;
-  dzLayer.appendChild(im); setTimeout(()=>im.remove(),t*1000+100); }
 function toast(){ const [ic,who,msg]=pick(DZ_NOTE); const d=document.createElement("div"); d.className="toast";
   d.innerHTML=`<img src="img/d/${ic}.png" alt=""><span><b>${who} · 刚刚</b>${msg}</span>`;
   dzLayer.querySelectorAll(".toast").forEach(x=>x.remove()); dzLayer.appendChild(d); setTimeout(()=>d.remove(),2700); }
 function distract(level){ dzClear();
-  if(level==="heavy"){ floater(); floater(); dzTimers.push(setInterval(floater,650), setInterval(toast,1700)); dzTimers.push(setTimeout(toast,500)); }
-  else { floater(); dzTimers.push(setInterval(floater,2200)); if(Math.random()<.5) dzTimers.push(setTimeout(toast,rnd(800,2500))); } }
+  if(level==="heavy"){ dzTimers.push(setTimeout(toast,600), setInterval(toast,1900)); }
+  else if(Math.random()<.5){ dzTimers.push(setTimeout(toast,rnd(1200,4000))); } }
 
 const app = document.getElementById("app"), meter = document.getElementById("meter");
 let i = 0, picks = [], timer = null, timeouts = 0, qTimer = null, qTick = null;
@@ -250,10 +260,16 @@ function flashIntro(q){
 function showFlash(q){
   const body = q.flash==="words"
     ? `<div class="words">${q.content.map(w=>`<span>${w}</span>`).join("")}</div>`
+    : q.flash==="phone"
+    ? `<div class="phone"><div class="sb"><span>21:47</span><span class="bat">5G <b></b><i>23%</i></span></div>
+        <div class="hd">晚饭吃啥<small>菲飞肥的外卖 · 已经纠结 20 分钟</small></div><div class="dishes" id="dishes"></div><div class="go">去下单</div></div>`
     : `<div class="flash">${q.content}</div>`;
   el(`<div class="stack"><div class="qnum"><span class="eyebrow">记住它</span><span class="tag t" id="sec">${q.sec}s</span></div>
     <div class="count"><i id="cd"></i></div>${body}</div>`);
   distract("heavy");
+  if(q.flash==="phone"){ const box=document.getElementById("dishes");
+    q.content.forEach(([dish,why,ok],n)=>setTimeout(()=>{ if(!box.isConnected) return;
+      box.insertAdjacentHTML("beforeend",`<div class="dish ${ok?'yes':'no'}"><span>${dish}</span><em>${ok?'✓ ':'✗ '}${why}</em></div>`); },400+n*1250)); }
   const cd=document.getElementById("cd"), sec=document.getElementById("sec");
   requestAnimationFrame(()=>{ cd.style.transition=`width ${q.sec}s linear`; cd.style.width="0%"; });
   let left=q.sec; clearInterval(timer);
@@ -290,8 +306,9 @@ function result(){
   const extra=[];
   if(timeouts) extra.push(`你超时了 ${timeouts} 次。10 秒都没撑住，题还没读完，上下文先清空了。`);
   if(r.pct.H<50) extra.push("附加诊断：检测到 AI 味。你说话开始自带“以下是三点建议”，请多发点语气词。");
-  if(picks[8]!==2) extra.push("第 9 题回溯失败：第 3 题的内容已经被你 compact 掉了。");
-  if(picks[1]===0 && picks[8]!==2) extra.push("你说记得昨天的蘸料，却忘了 5 分钟前的面。这就是幻觉的样子。");
+  const cb=Q.findIndex(q=>q.callback), cbOk=picks[cb]===Q[cb].answer;
+  if(!cbOk) extra.push(`第 ${cb+1} 题回溯失败：第 3 题的内容已经被你 compact 掉了。`);
+  if(picks[1]===0 && !cbOk) extra.push("你说记得昨天的蘸料，却忘了 5 分钟前的面。这就是幻觉的样子。");
   el(`<div class="stack reveal">
     <span class="eyebrow center">你的上下文窗口</span>
     <img class="hero-img" src="img/${t.img}.png" alt="${t.name}">
