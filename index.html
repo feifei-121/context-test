@@ -85,17 +85,14 @@ foot{display:block;text-align:center;font-size:12px;color:var(--muted)}
 .toast img{width:30px;height:30px}
 .toast b{display:block;font-size:12px;color:var(--muted);font-weight:500}
 @keyframes toast{0%{opacity:0;transform:translate(-50%,-30px)}12%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-30px)}}
-.alert{position:absolute;left:50%;top:42%;width:min(320px,calc(100% - 40px));transform:translate(-50%,-50%);
-  background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px;text-align:center;
-  box-shadow:0 24px 60px rgba(0,0,0,.35);animation:alertin 1.8s ease forwards}
-.alert img{width:56px;height:56px;animation:shake .35s ease 3}
-.alert h4{margin:6px 0 2px;font-size:17px}
-.alert p{font-size:13px;color:var(--muted)}
-.alert .ab{display:flex;gap:8px;margin-top:12px}
-.alert .ab span{flex:1;padding:7px 0;border-radius:8px;background:var(--soft);border:1px solid var(--line);font-size:13px}
-.alert .ab span:last-child{background:var(--sun);border-color:var(--sun);color:#1B2033}
-@keyframes alertin{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}8%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}14%,88%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.95)}}
-@keyframes shake{0%,100%{rotate:0deg}25%{rotate:-14deg}75%{rotate:14deg}}
+.qbar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:-6px 0 2px}
+.qbar i{display:block;height:100%;width:100%;background:var(--teal);animation:qdrain var(--qs,10s) linear forwards}
+@keyframes qdrain{0%{width:100%;background:var(--teal)}69%{background:var(--teal)}70%{background:var(--accent)}100%{width:0;background:var(--accent)}}
+.ramble{font-size:17px;line-height:1.8}
+.ramble b{color:var(--ink)}
+.qsec{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums;color:var(--muted)}
+.qsec.hot{color:var(--accent)}
+.timeout{color:var(--accent);font-family:var(--display);font-size:22px;text-align:center}
 .hero-img{width:150px;height:150px;align-self:center}
 .reveal .hero-img{animation:pop 1s cubic-bezier(.2,1.5,.4,1) both}
 @keyframes pop{0%{transform:scale(.2) rotate(-200deg);filter:blur(10px);opacity:0}60%{opacity:1}100%{transform:none;filter:none}}
@@ -140,8 +137,8 @@ foot{display:block;text-align:center;font-size:12px;color:var(--muted)}
 <script>
 const SITE = "https://feifei-121.github.io/context-test/";
 const Q = [
- {dim:"冲浪", text:"最近很火的“画地为牢”，你第一次刷到的时候……", opts:[
-   ["秒懂，还顺手造了句：我画地为牢，工位",{H:3,M:3,F:2}],["知道是综艺里出来的，谁对谁说的忘了",{H:2,M:1,F:2}],["没看懂，先去问了 AI",{H:0,M:1,F:1}],["刷到了，划走了，现在才知道是个梗",{H:1,M:0,F:0}]]},
+ {dim:"冲浪", ramble:true, text:"今天楼下的桂花开了第二轮。同事小王新买的电动牙刷有八个档位，他只用第一档。地铁上有个小孩一直在数站，数到第七站就睡着了。你的外卖备注写了“不要香菜”，结果还是来了香菜。好了，说正事：<b>“许飞画地为牢”的下一句是什么？</b>", opts:[
+   ["厉娜吃肯德基"],["厉娜去问 AI"],["厉娜吃麦当劳"],["厉娜也画地为牢"]], answer:2, w:{F:2,M:1,H:1}},
  {dim:"记忆", text:"你能清楚地说出昨天晚饭吃了什么吗？", opts:[
    ["能，连蘸料怎么调的都记得",{M:3}],["记得主菜，配菜已经糊了",{M:2}],["我得翻一下外卖记录",{M:1}],["我昨天……吃晚饭了吗？",{M:0}]]},
  {dim:"闪现", flash:"text", sec:6, intro:"下面这段话只显示 6 秒，看完会问你一个细节。",
@@ -194,17 +191,15 @@ function floater(){ const im=new Image(); im.src="img/d/"+pick(DZ_IMG)+".png"; i
 function toast(){ const [ic,who,msg]=pick(DZ_NOTE); const d=document.createElement("div"); d.className="toast";
   d.innerHTML=`<img src="img/d/${ic}.png" alt=""><span><b>${who} · 刚刚</b>${msg}</span>`;
   dzLayer.querySelectorAll(".toast").forEach(x=>x.remove()); dzLayer.appendChild(d); setTimeout(()=>d.remove(),2700); }
-const DZ_ALERT=[["上下文即将溢出","剩余窗口 3%，前文将被自动 compact","忽略","立即压缩"],["检测到注意力泄漏","有 37 个后台进程正在占用你的大脑","忽略","全部结束"],
- ["内存不足","昨天晚饭的记忆将被释放以腾出空间","取消","释放"],["大脑未响应","是否等待它恢复？","强制退出","等待"],["电量不足","你的专注力仅剩 8%","稍后","省电模式"]];
-function alertPop(){ const [h,m,b1,b2]=pick(DZ_ALERT); const d=document.createElement("div"); d.className="alert";
-  d.innerHTML=`<img src="img/d/warning.png" alt=""><h4>${h}</h4><p>${m}</p><div class="ab"><span>${b1}</span><span>${b2}</span></div>`;
-  dzLayer.querySelectorAll(".alert").forEach(x=>x.remove()); dzLayer.appendChild(d); setTimeout(()=>d.remove(),1900); }
 function distract(level){ dzClear();
-  if(level==="heavy"){ floater(); floater(); dzTimers.push(setInterval(floater,650), setInterval(toast,1700)); dzTimers.push(setTimeout(toast,500)); dzTimers.push(setTimeout(alertPop,rnd(1500,3200))); }
-  else { floater(); dzTimers.push(setInterval(floater,2200)); if(Math.random()<.5) dzTimers.push(setTimeout(toast,rnd(800,2500))); if(Math.random()<.3) dzTimers.push(setTimeout(alertPop,rnd(1200,3500))); } }
+  if(level==="heavy"){ floater(); floater(); dzTimers.push(setInterval(floater,650), setInterval(toast,1700)); dzTimers.push(setTimeout(toast,500)); }
+  else { floater(); dzTimers.push(setInterval(floater,2200)); if(Math.random()<.5) dzTimers.push(setTimeout(toast,rnd(800,2500))); } }
 
 const app = document.getElementById("app"), meter = document.getElementById("meter");
-let i = 0, picks = [], timer = null;
+let i = 0, picks = [], timer = null, timeouts = 0, qTimer = null, qTick = null;
+const QSEC = 10;
+function stopQ(){ clearTimeout(qTimer); clearInterval(qTick); }
+function next(){ i++; i<Q.length?ask():result(); }
 
 function el(html){ app.innerHTML = html; app.scrollIntoView({block:"nearest"}); }
 function setMeter(){ meter.hidden=false; const p=i/Q.length;
@@ -212,7 +207,7 @@ function setMeter(){ meter.hidden=false; const p=i/Q.length;
   document.getElementById("tok").textContent=Math.round(p*256)+"k / ?"; }
 
 function home(){
-  meter.hidden = true; dzClear();
+  meter.hidden = true; dzClear(); stopQ();
   el(`<div class="stack">
     <span class="eyebrow">Context Window Test</span>
     <h1>测测你的<span class="k">上下文</span></h1>
@@ -220,7 +215,7 @@ function home(){
     <p class="note">温馨提示：有闪现题目哦，做好准备~</p>
     <button class="btn" id="go">开始测试</button>
     <p class="hint" style="text-align:center">冬令时解药~</p></div>`);
-  document.getElementById("go").onclick = ()=>{ i=0; picks=[]; ask(); };
+  document.getElementById("go").onclick = ()=>{ i=0; picks=[]; timeouts=0; ask(); };
 }
 
 function ask(){
@@ -228,12 +223,19 @@ function ask(){
   const q = Q[i];
   if(q.flash && !q._shown){ return flashIntro(q); }
   distract("light");
-  const head = `<div class="qnum"><span class="eyebrow">第 ${i+1} / ${Q.length} 题</span><span class="tag ${q.flash||q.callback?'t':''}">${q.callback?'回溯':q.dim}</span></div>`;
-  el(`<div class="stack">${head}<h2>${q.text}</h2>
+  stopQ();
+  const head = `<div class="qbar" style="--qs:${QSEC}s"><i></i></div><div class="qnum"><span class="eyebrow">第 ${i+1} / ${Q.length} 题 · <span class="qsec" id="qs">${QSEC}s</span></span><span class="tag ${q.flash||q.callback?'t':''}">${q.callback?'回溯':q.dim}</span></div>`;
+  el(`<div class="stack">${head}${q.ramble?`<p class="ramble">${q.text}</p>`:`<h2>${q.text}</h2>`}
     <div class="opts">${q.opts.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${o[0]}</span></button>`).join("")}</div></div>`);
+  let left=QSEC; const qs=document.getElementById("qs");
+  qTick=setInterval(()=>{ left--; qs.textContent=Math.max(left,0)+"s"; if(left<=3) qs.classList.add("hot"); },1000);
+  qTimer=setTimeout(()=>{ stopQ(); picks[i]=-1; timeouts++;
+    app.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+    app.querySelector(".opts").insertAdjacentHTML("afterend",'<p class="timeout">超时！这题算你 compact 掉了</p>');
+    setTimeout(next,900); },QSEC*1000);
   app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
-    b.classList.add("picked"); app.querySelectorAll(".opt").forEach(x=>x.disabled=true);
-    picks[i]=+b.dataset.k; setTimeout(()=>{ i++; i<Q.length?ask():result(); },280);
+    stopQ(); b.classList.add("picked"); app.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+    picks[i]=+b.dataset.k; setTimeout(next,280);
   });
 }
 
@@ -267,7 +269,7 @@ function score(){
       rev.push({n:n+1,ok,right:q.opts[q.answer][0]});
     } else {
       const dims=new Set(); q.opts.forEach(o=>Object.keys(o[1]).forEach(d=>dims.add(d)));
-      dims.forEach(d=>{ max[d]+=Math.max(...q.opts.map(o=>o[1][d]??0)); got[d]+=q.opts[picks[n]][1][d]??0; });
+      dims.forEach(d=>{ max[d]+=Math.max(...q.opts.map(o=>o[1][d]??0)); got[d]+=(q.opts[picks[n]]?.[1][d])??0; });
     }
   });
   const pct={}; for(const d in got) pct[d]=max[d]?Math.round(got[d]/max[d]*100):0;
@@ -278,7 +280,7 @@ function score(){
 }
 
 function result(){
-  dzClear(); meter.hidden=true;
+  dzClear(); stopQ(); meter.hidden=true;
   const r=score(), t=r.tier;
   const link=/^https?:/.test(location.href)&&location.hostname.endsWith("github.io")?location.origin+location.pathname:SITE;
   const share=`我在「测测你的上下文」里测出来是 ${t.k}（${t.name}），类型 ${r.code}。你的脑子现在多少 K？来测：${link}`;
@@ -286,6 +288,7 @@ function result(){
     return `<div class="dim"><div class="row"><span>${D.lo[0]} ${D.lo[1]}</span><b>${D.name} ${p}%</b><span>${D.hi[1]} ${D.hi[0]}</span></div>
       <div class="track"><i style="width:${Math.max(p,3)}%"></i></div></div>`; }).join("");
   const extra=[];
+  if(timeouts) extra.push(`你超时了 ${timeouts} 次。10 秒都没撑住，题还没读完，上下文先清空了。`);
   if(r.pct.H<50) extra.push("附加诊断：检测到 AI 味。你说话开始自带“以下是三点建议”，请多发点语气词。");
   if(picks[8]!==2) extra.push("第 9 题回溯失败：第 3 题的内容已经被你 compact 掉了。");
   if(picks[1]===0 && picks[8]!==2) extra.push("你说记得昨天的蘸料，却忘了 5 分钟前的面。这就是幻觉的样子。");
