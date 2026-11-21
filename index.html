@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>测测你的上下文</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: one centered card column, a "token meter" pinned on top like a model's context bar */
+:root{
+  --bg:#EEF1F6; --card:#FFFFFF; --ink:#1B2033; --muted:#636A82; --line:#D9DEE8;
+  --accent:#FF5A36; --accent-ink:#FFFFFF; --teal:#11968C; --sun:#FFD447; --soft:#F6F7FB;
+  --display:"ZCOOL KuaiLe","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --body:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12141C; --card:#1C1F2B; --ink:#ECEEF5; --muted:#9AA0B6; --line:#2E3244;
+  --accent:#FF7452; --accent-ink:#1A0E0A; --teal:#3CC4B8; --sun:#FFD95E; --soft:#232736; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12141C; --card:#1C1F2B; --ink:#ECEEF5; --muted:#9AA0B6; --line:#2E3244;
+  --accent:#FF7452; --accent-ink:#1A0E0A; --teal:#3CC4B8; --sun:#FFD95E; --soft:#232736; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.meter{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.meter .bar{flex:1;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter .fill{height:100%;width:0;background:var(--teal);transition:width .5s ease}
+.meter b{color:var(--ink);font-variant-numeric:tabular-nums}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px 24px}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;margin:0;line-height:1.25}
+h1{font-size:clamp(40px,11vw,60px);letter-spacing:1px}
+h1 .k{color:var(--accent)}
+h2{font-size:26px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+p{margin:0}
+.stack{display:flex;flex-direction:column;gap:14px}
+.scale{display:flex;gap:6px;flex-wrap:wrap;font-family:var(--mono);font-size:12px}
+.scale span{padding:3px 9px;border-radius:99px;background:var(--soft);border:1px solid var(--line)}
+.scale span.hot{background:var(--sun);border-color:var(--sun);color:#1B2033}
+button{font:inherit;cursor:pointer;border:none}
+.btn{background:var(--accent);color:var(--accent-ink);padding:14px 22px;border-radius:14px;font-size:17px;font-weight:600;
+  box-shadow:0 4px 0 color-mix(in srgb,var(--accent) 60%,#000);transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--accent) 60%,#000)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
+button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{text-align:left;background:var(--soft);color:var(--ink);border:1.5px solid var(--line);border-radius:14px;
+  padding:14px 16px;font-size:16px;display:flex;gap:12px;align-items:flex-start;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--accent)}
+.opt .l{font-family:var(--mono);font-weight:700;color:var(--accent);flex:none}
+.opt.picked{background:color-mix(in srgb,var(--accent) 14%,var(--card));border-color:var(--accent)}
+.qnum{display:flex;justify-content:space-between;align-items:center}
+.tag{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:6px;background:var(--sun);color:#1B2033}
+.tag.t{background:var(--teal);color:var(--card)}
+.flash{background:var(--soft);border:1.5px dashed var(--line);border-radius:14px;padding:18px;font-size:16px;line-height:1.85}
+.words{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;font-size:20px;font-family:var(--display)}
+.words span{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 0}
+.count{height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.count i{display:block;height:100%;background:var(--accent);width:100%}
+.hint{font-size:13px;color:var(--muted)}
+.big{font-family:var(--display);font-size:clamp(64px,20vw,104px);line-height:1;color:var(--accent)}
+.code{font-family:var(--mono);font-weight:700;font-size:22px;letter-spacing:.3em}
+.dims{display:flex;flex-direction:column;gap:14px}
+.dim .row{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.dim .row b{color:var(--ink);font-weight:600}
+.dim .track{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:4px}
+.dim .track i{display:block;height:100%;background:var(--teal);border-radius:99px}
+.note{background:color-mix(in srgb,var(--sun) 30%,var(--card));border-radius:12px;padding:12px 14px;font-size:14px}
+.review{font-size:14px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+.review .ok{color:var(--teal)} .review .no{color:var(--accent)}
+.row-btns{display:flex;gap:10px;flex-wrap:wrap}
+.row-btns .btn{flex:1 1 160px}
+textarea{width:100%;font:inherit;font-size:14px;border-radius:10px;border:1px solid var(--line);background:var(--soft);color:var(--ink);padding:10px}
+.compact{font-family:var(--mono);font-size:14px;color:var(--muted);min-height:120px;white-space:pre-line}
+foot{display:block;text-align:center;font-size:12px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="meter" id="meter" hidden><span>上下文已用</span><div class="bar"><div class="fill" id="fill"></div></div><b id="tok">0k</b></div>
+  <div class="card" id="app"></div>
+  <foot>纯属娱乐 · 测完记得转给那个回消息只回“嗯嗯”的朋友</foot>
+</div>
+
+<script>
+const SITE = "https://feifei-121.github.io/context-test/";
+const Q = [
+ {dim:"记忆", text:"你能清楚地说出昨天晚饭吃了什么吗？", opts:[
+   ["能，连蘸料怎么调的都记得",{M:3}],["记得主菜，配菜已经糊了",{M:2}],["我得翻一下外卖记录",{M:1}],["我昨天……吃晚饭了吗？",{M:0}]]},
+ {dim:"闪现", flash:"text", sec:6, intro:"下面这段话只显示 6 秒，看完会问你一个细节。",
+   content:"周五晚上七点，小林加完班走进楼下的面馆。他本来想点牛肉面，排队时听见前面的人说今天番茄鸡蛋面加双份蛋，犹豫了三秒，最后点了一碗酸菜肉丝面，还多加了一个卤蛋。付款时他发现手机只剩 8% 的电。",
+   text:"小林付款时手机还剩多少电？", opts:[["18%"],["8%"],["3%"],["80%"]], answer:1, w:{M:3,F:2}},
+ {dim:"专注", text:"你打开手机准备查个东西，接下来通常会……", opts:[
+   ["查完就关，干脆利落",{F:3}],["顺手刷了几条，然后想起来去查",{F:2}],["刷了四十分钟，忘了自己要查啥",{F:1}],["别问了，我现在就是这个状态",{F:0}]]},
+ {dim:"概括", text:"用一句话说说你上周干了啥。哪个最像你？", opts:[
+   ["周二交了报告，周四和朋友吃烤肉，周末睡到中午",{S:3,H:3}],["推进了多项工作，整体节奏稳中有进",{S:1,H:0}],["忙，但说不上来忙了啥",{S:0,H:2}],["在多个维度完成了自我迭代，形成初步闭环",{S:0,H:0}]]},
+ {dim:"闪现", flash:"text", sec:6, intro:"再来一段，6 秒，这次问主旨。",
+   content:"很多人觉得自己记性变差了，其实问题常常不在记忆本身。一天切换几十次应用，每条信息只看前两行，大脑没机会把内容放进长期记忆，自然什么都留不下。与其买补脑的东西，不如每天留出一段不被打断的时间，完整地读完一件事。",
+   text:"这段话主要想说什么？", opts:[["记性变差主要是年纪大了"],["频繁切换让信息留不下来，需要整块不被打断的时间"],["补脑产品对记忆帮助很大"],["应该少玩手机多睡觉"]], answer:1, w:{S:3,F:1}},
+ {dim:"专注", text:"朋友给你发来一条 60 秒的语音，你会……", opts:[
+   ["从头听到尾",{F:3}],["转文字扫一眼",{F:2}],["听到一半去干别的了",{F:1}],["回了句“嗯嗯”，其实没听",{F:0,H:1}]]},
+ {dim:"闪现", flash:"words", sec:5, intro:"8 个词，5 秒，记住它们。",
+   content:["火锅","键盘","月亮","雨伞","猫","地铁","咖啡","气球"],
+   text:"下面哪个词刚才没出现？", opts:[["雨伞"],["地铁"],["台灯"],["气球"]], answer:2, w:{M:3}},
+ {dim:"人味", text:"朋友半夜发来：“我失恋了。”你的第一反应最接近……", opts:[
+   ["啊？？谁甩的你，出来，我请",{H:3}],["我理解你的感受。失恋需要时间消化，以下是三点建议：1. 保持规律作息……",{H:0}],["抱抱，想聊随时找我",{H:2}],["先已读，想着晚点回，然后忘了",{H:1,F:0}]]},
+ {dim:"上下文", text:"最后一题，不许往回翻：第 2 题里，小林最后点了什么面？", opts:[
+   ["牛肉面"],["番茄鸡蛋面"],["酸菜肉丝面"],["他没吃，手机没电了"]], answer:2, w:{M:4}, callback:true},
+];
+
+const DIM = {
+  M:{name:"记忆",hi:["R","能回忆"],lo:["C","已压缩"]},
+  F:{name:"专注",hi:["F","专注"],lo:["D","分心"]},
+  S:{name:"概括",hi:["S","抓重点"],lo:["V","说空话"]},
+  H:{name:"人味",hi:["H","人话"],lo:["A","AI味"]},
+};
+
+const TIERS = [
+ {min:-1, k:"−∞", name:"幻觉体", say:"你的上下文已经是负数了。不只是记不住，是开始自己编。问你昨天吃了什么，你能讲出三个版本，每个都很有画面感。", tip:"今晚先别测了，断网睡一觉。"},
+ {min:15, k:"4K", name:"金鱼型", say:"窗口 4K，聊三句就要 compact。你不是不努力，是每条消息都只看了前两行。", tip:"今天挑一件小事，从头做到尾，比如吃一顿不看手机的饭。"},
+ {min:30, k:"32K", name:"便签型", say:"能装下一段对话，装不下一整天。重要的事不写下来，就跟没发生过一样。", tip:"睡前用三句大白话说说今天干了啥，别用“推进”和“对齐”。"},
+ {min:45, k:"128K", name:"标准版", say:"主流配置，日常够用。偶尔掉帧，比如刚放下手机就忘了刚才看的是什么。", tip:"少开几个标签页，脑子里那些也算。"},
+ {min:60, k:"256K", name:"长文本型", say:"能读完长文，还能说出重点。放在今天，这已经算稀有配置了。", tip:"小心群消息，它们会一点点稀释你的窗口。"},
+ {min:75, k:"1M", name:"档案馆型", say:"细节、主旨、前情提要你全都记得。朋友吵架翻旧账的时候，你是最可怕的那个。", tip:"把这个测试转给你身边的金鱼。"},
+ {min:90, k:"+∞", name:"人类原装", say:"没有上下文上限，也没有 AI 味。你可能是最后一批能完整读完一篇文章的人。", tip:"请保持。顺便把链接转给最需要的朋友。", needAll:true},
+];
+
+const app = document.getElementById("app"), meter = document.getElementById("meter");
+let i = 0, picks = [], timer = null;
+
+function el(html){ app.innerHTML = html; app.scrollIntoView({block:"nearest"}); }
+function setMeter(){ meter.hidden=false; const p=i/Q.length;
+  document.getElementById("fill").style.width=(p*100)+"%";
+  document.getElementById("tok").textContent=Math.round(p*256)+"k / ?"; }
+
+function home(){
+  meter.hidden = true;
+  el(`<div class="stack">
+    <span class="eyebrow">Context Window Test · 9 题</span>
+    <h1>测测你的<span class="k">上下文</span></h1>
+    <p>大模型的上下文一满，就得 compact，前面的内容被压成一句“之前我们聊了一些事”。最近你是不是也这样：看完就忘，说话越来越像“综上所述”？</p>
+    <p class="note">温馨提示：有闪现题目哦，做好准备~</p>
+    <button class="btn" id="go">开始测试</button></div>`);
+  document.getElementById("go").onclick = ()=>{ i=0; picks=[]; ask(); };
+}
+
+function ask(){
+  setMeter();
+  const q = Q[i];
+  if(q.flash && !q._shown){ return flashIntro(q); }
+  const head = `<div class="qnum"><span class="eyebrow">第 ${i+1} / ${Q.length} 题</span><span class="tag ${q.flash||q.callback?'t':''}">${q.callback?'回溯':q.dim}</span></div>`;
+  el(`<div class="stack">${head}<h2>${q.text}</h2>
+    <div class="opts">${q.opts.map((o,k)=>`<button class="opt" data-k="${k}"><span class="l">${"ABCD"[k]}</span><span>${o[0]}</span></button>`).join("")}</div></div>`);
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    b.classList.add("picked"); app.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+    picks[i]=+b.dataset.k; setTimeout(()=>{ i++; i<Q.length?ask():compacting(); },280);
+  });
+}
+
+function flashIntro(q){
+  el(`<div class="stack"><div class="qnum"><span class="eyebrow">第 ${i+1} / ${Q.length} 题</span><span class="tag t">闪现 ${q.sec}s</span></div>
+    <h2>${q.intro}</h2><p class="hint">准备好再点，内容只出现一次。</p>
+    <button class="btn" id="ready">我准备好了</button></div>`);
+  document.getElementById("ready").onclick=()=>showFlash(q);
+}
+
+function showFlash(q){
+  const body = q.flash==="words"
+    ? `<div class="words">${q.content.map(w=>`<span>${w}</span>`).join("")}</div>`
+    : `<div class="flash">${q.content}</div>`;
+  el(`<div class="stack"><div class="qnum"><span class="eyebrow">记住它</span><span class="tag t" id="sec">${q.sec}s</span></div>
+    <div class="count"><i id="cd"></i></div>${body}</div>`);
+  const cd=document.getElementById("cd"), sec=document.getElementById("sec");
+  requestAnimationFrame(()=>{ cd.style.transition=`width ${q.sec}s linear`; cd.style.width="0%"; });
+  let left=q.sec; clearInterval(timer);
+  timer=setInterval(()=>{ left--; sec.textContent=left+"s"; if(left<=0){ clearInterval(timer); q._shown=true; ask(); } },1000);
+}
+
+function score(){
+  const got={M:0,F:0,S:0,H:0}, max={M:0,F:0,S:0,H:0}; let flashAll=true; const rev=[];
+  Q.forEach((q,n)=>{
+    if(q.answer!==undefined){
+      const ok = picks[n]===q.answer; if(!ok) flashAll=false;
+      for(const d in q.w){ max[d]+=q.w[d]; if(ok) got[d]+=q.w[d]; }
+      rev.push({n:n+1,ok,right:q.opts[q.answer][0]});
+    } else {
+      const dims=new Set(); q.opts.forEach(o=>Object.keys(o[1]).forEach(d=>dims.add(d)));
+      dims.forEach(d=>{ max[d]+=Math.max(...q.opts.map(o=>o[1][d]??0)); got[d]+=q.opts[picks[n]][1][d]??0; });
+    }
+  });
+  const pct={}; for(const d in got) pct[d]=max[d]?Math.round(got[d]/max[d]*100):0;
+  const total=Math.round((pct.M+pct.F+pct.S+pct.H)/4);
+  let tier=TIERS[0]; for(const t of TIERS){ if(total>=t.min && (!t.needAll||flashAll)) tier=t; }
+  const code=Object.keys(DIM).map(d=>pct[d]>=50?DIM[d].hi[0]:DIM[d].lo[0]).join("");
+  return {pct,total,tier,code,rev,flashAll};
+}
+
+function compacting(){
+  meter.hidden=true;
+  const lines=["正在读取你的 9 条回答…","检测到上下文接近上限","正在 compact 前文…","之前我们聊了一些事。","正在估算窗口大小…"];
+  el(`<div class="stack"><span class="eyebrow">Processing</span><div class="compact" id="log"></div></div>`);
+  const log=document.getElementById("log"); let n=0;
+  const t=setInterval(()=>{ log.textContent+=(n?"\n":"")+"> "+lines[n]; n++; if(n>=lines.length){ clearInterval(t); setTimeout(result,500); } },420);
+}
+
+function result(){
+  const r=score(), t=r.tier;
+  const link=/^https?:/.test(location.href)&&location.hostname.endsWith("github.io")?location.origin+location.pathname:SITE;
+  const share=`我在「测测你的上下文」里测出来是 ${t.k}（${t.name}），类型 ${r.code}。你的脑子现在多少 K？来测：${link}`;
+  const dims=Object.keys(DIM).map(d=>{ const D=DIM[d],p=r.pct[d];
+    return `<div class="dim"><div class="row"><span>${D.lo[0]} ${D.lo[1]}</span><b>${D.name} ${p}%</b><span>${D.hi[1]} ${D.hi[0]}</span></div>
+      <div class="track"><i style="width:${Math.max(p,3)}%"></i></div></div>`; }).join("");
+  const extra=[];
+  if(r.pct.H<50) extra.push("附加诊断：检测到 AI 味。你说话开始自带“以下是三点建议”，请多发点语气词。");
+  if(picks[8]!==2) extra.push("第 9 题回溯失败：第 2 题的内容已经被你 compact 掉了。");
+  if(picks[0]===0 && picks[8]!==2) extra.push("你说记得昨天的蘸料，却忘了 5 分钟前的面。这就是幻觉的样子。");
+  el(`<div class="stack">
+    <span class="eyebrow">你的上下文窗口</span>
+    <div class="big">${t.k}</div>
+    <h2>${t.name}</h2>
+    <div class="code" title="记忆/专注/概括/人味">${r.code}</div>
+    <p>${t.say}</p>
+    <p><b>compact 建议：</b>${t.tip}</p>
+    ${extra.map(x=>`<div class="note">${x}</div>`).join("")}
+    <div class="dims">${dims}</div>
+    <p class="hint">类型码四位分别是：记忆 R/C · 专注 F/D · 概括 S/V · 人味 H/A</p>
+    <textarea id="sharetxt" rows="3" readonly>${share}</textarea>
+    <div class="row-btns"><button class="btn" id="copy">复制结果，发给朋友</button><button class="btn ghost" id="again">再测一次</button></div>
+    <p class="hint" id="copied" hidden>已复制结果和链接，直接粘贴发给朋友。</p>
+  </div>`);
+  document.getElementById("copy").onclick=()=>{
+    const ta=document.getElementById("sharetxt"), ok=()=>document.getElementById("copied").hidden=false;
+    try{ navigator.clipboard.writeText(share).then(ok,()=>{ta.select();ok();}); }catch(e){ ta.select(); ok(); }
+  };
+  document.getElementById("again").onclick=()=>{ Q.forEach(q=>delete q._shown); home(); };
+}
+
+home();
+</script>
+
+</html>
